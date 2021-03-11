@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 
-function Header() {
+function Header({ user }) {
     return (
         <div>
             <Container>
@@ -18,10 +18,10 @@ function Header() {
             </Main>
             <UserContainer>
                 <Name>
-                    Antony
+                    {user.name}
                 </Name>
                 <UserImage>
-                    <img src="https://i.imgur.com/6VBx3io.png" />
+                    <img src={user.photo ? user.photo : "https://i.imgur.com/6VBx3io.png"} />
                 </UserImage>
             </UserContainer>
             </Container>

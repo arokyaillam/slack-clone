@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import Header from './Components/Header'
 import Sidebar from './Components/Sidebar'
 import db from './Components/firebase'
+import { auth, provider} from './Components/firebase'
 function App() {
 
   const [rooms, setRooms] = useState([])
@@ -20,6 +21,13 @@ function App() {
       }))
     })
 
+  }
+
+  const signOut = () =>{
+    auth.signOut().then(() =>{
+      localStorage.removeItem("user")
+      setUser(null);
+    })
   }
   useEffect(() => {
     getChannels()
@@ -35,7 +43,7 @@ function App() {
             :
 
             <Container>
-              <Header user = {user}/>
+              <Header signOut = {signOut} user = {user}/>
               <Main>
                 <Sidebar rooms={rooms} />
                 <Switch>

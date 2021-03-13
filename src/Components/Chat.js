@@ -1,16 +1,52 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import styled from 'styled-components'
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import ChatInput from './ChatInput'
 import ChatMessage from './ChatMessage'
+import db from './firebase'
+import { useParams } from 'react-router-dom'
+
 
 function Chat() {
+
+    let { channelId } = useParams();
+    const [channel, setChannel ] = useState();
+    const [ messages, setMassage ] = useState([])
+
+    const getMessages = () => {
+        db.collection('rooms')
+        .doc(channelId)
+        .collection('messages')
+        .orderBy('timestamp', 'asc')
+        .onSnapshot((snapshot) => {
+            let messages = snapshot.docs.map((doc) => doc.data());
+            console.log(messages)
+            setMassage(messages);
+        })
+    }
+    
+    const getChannel = () => {
+        db.collection('rooms')
+        .doc(channelId)
+        .onSnapshot((snapshot) => {
+            setChannel(snapshot.data());
+            console.log(messages)
+            setMassage(messages)
+        })
+    }
+
+    useEffect(() => {
+        getChannel();
+        getMessages();
+    }, [channelId])
+
+
     return (
         <Container>
             <Header>
                 <Channel>
                     <ChannelName>
-                        # Arokyaillam
+                        # {channel && channel.name}
                     </ChannelName>
                     <ChannelInfo>
                      Company-wide announcement   
@@ -24,7 +60,17 @@ function Chat() {
                 </ChannelDetails>
             </Header>
             <MessageContainer>
-                <ChatMessage />
+                {
+                    messages.length > 0 && 
+                    messages.map((data, index) => (
+                        <ChatMessage 
+                            text = {data.text}
+                            name = {data.user}
+                            image = {data.userImage}
+                            timestamp = {data.timestamp}
+                        />
+                    ))
+                }
             </MessageContainer>
             <ChatInput />
         </Container>

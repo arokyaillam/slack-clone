@@ -1,5 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
+
+
 function ChatMessage({text, name, image, timestamp}) {
     return (
         <Container>
